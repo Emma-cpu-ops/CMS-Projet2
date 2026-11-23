@@ -9,16 +9,16 @@
 
 ## 👥 Équipe & Rôles
 
-* **Membre 1 (Identité & Design) :** *(Nom / Prénom)* — Charte graphique, logo, thème en blocs Twenty Twenty-Five, pages d'accueil et responsive (390px).
-* **Membre 2 (Cadrage & Catalogue) :** *(Nom / Prénom)* — Note de cadrage `NOTE.md`, 12 fiches produits, variations, promotions, TVA, livraison.
+* **Membre 1 (Identité & Design) :** *(Allan)* — Charte graphique, logo, thème en blocs Twenty Twenty-Five, pages d'accueil et responsive (390px).
+* **Membre 2 (Cadrage & Catalogue) :** *(Dibé)* — Note de cadrage `NOTE.md`, 12 fiches produits, variations, promotions, TVA, livraison.
 * **Membre 3 (DevOps, Docker & API) :** **Emmanuelle** — Docker Compose, scripts d'automatisation, collection Postman API, sécurité.
 
 ---
 
 ## 🏢 Présentation du Client & de la Boutique
 
-* **Commerce choisi :** *(Exemple : Torréfacteur artisanal à Lyon / Épicerie fine / Savonnerie)*
-* **Nom de la marque :** *(Nom fictif)*
+* **Commerce choisi :** *Savonnerie*
+* **Nom de la marque :** *Kabakourou*
 * **Slogan & Promesse :** *(Exemple : Cafés de spécialité torréfiés localement et issus du commerce équitable)*
 * **Cible :** Particuliers et amateurs de produits artisanaux à la recherche de qualité et de traçabilité.
 
