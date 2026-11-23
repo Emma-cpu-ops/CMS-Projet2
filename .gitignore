@@ -12,3 +12,4 @@ wp-config.php
 # Fichiers systèmes parasites
 .DS_Store
 Thumbs.db
+*.pdf

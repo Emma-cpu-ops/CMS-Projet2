@@ -1,0 +1,260 @@
+{
+	"info": {
+		"_postman_id": "b3e2a101-7890-4cde-8f12-9876543210ab",
+		"name": "Boutique E-Commerce WooCommerce (Store API & Admin)",
+		"description": "Collection officielle Postman pour le projet B3.2 CMS & E-Commerce (IRIS M1 Info Dev)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "cartToken",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Lister les produits (Store API)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Statut 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Les prix sont exprimés en centimes (currency_minor_unit)\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.be.an(\"array\");",
+							"    if (jsonData.length > 0) {",
+							"        pm.expect(jsonData[0].prices).to.have.property(\"currency_minor_unit\");",
+							"        pm.expect(jsonData[0].prices.currency_minor_unit).to.be.a(\"number\");",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/wp-json/wc/store/v1/products",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wp-json",
+						"wc",
+						"store",
+						"v1",
+						"products"
+					]
+				},
+				"description": "Vérifie le catalogue public et la présence des prix en centimes."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Récupérer ou initialiser le panier",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Statut 200 OK\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"En-tête Cart-Token présent et mémorisé dans une variable\", function () {",
+							"    pm.response.to.have.header(\"Cart-Token\");",
+							"    var token = pm.response.headers.get(\"Cart-Token\");",
+							"    pm.collectionVariables.set(\"cartToken\", token);",
+							"    console.log(\"Cart-Token capturé : \" + token);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/wp-json/wc/store/v1/cart",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wp-json",
+						"wc",
+						"store",
+						"v1",
+						"cart"
+					]
+				},
+				"description": "Initialise le panier et extrait l'en-tête Cart-Token."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Ajouter un article au panier",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Statut 201 Created\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test(\"Le jeton Cart-Token est renvoyé\", function () {",
+							"    pm.response.to.have.header(\"Cart-Token\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cart-Token",
+						"value": "{{cartToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": 1,\n    \"quantity\": 1\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/wp-json/wc/store/v1/cart/add-item",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wp-json",
+						"wc",
+						"store",
+						"v1",
+						"cart",
+						"add-item"
+					]
+				},
+				"description": "Ajoute un article au panier en transmettant le Cart-Token."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Valider la commande (Checkout)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Statut 200 ou 201 (Commande créée)\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							"",
+							"pm.test(\"La réponse contient les détails de commande\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"order_id\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Cart-Token",
+						"value": "{{cartToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"billing_address\": {\n        \"first_name\": \"Jean\",\n        \"last_name\": \"Dupont\",\n        \"address_1\": \"10 rue de la Paix\",\n        \"city\": \"Paris\",\n        \"postcode\": \"75001\",\n        \"country\": \"FR\",\n        \"email\": \"jean.dupont.test@example.com\",\n        \"phone\": \"0601020304\"\n    },\n    \"payment_method\": \"bacs\"\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/wp-json/wc/store/v1/checkout",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wp-json",
+						"wc",
+						"store",
+						"v1",
+						"checkout"
+					]
+				},
+				"description": "Finalise la commande à partir du panier courant."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Sécurité : Consulter les commandes sans clé d'API",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Statut 401 Unauthorized (Excellente nouvelle : API protégée)\", function () {",
+							"    pm.response.to.have.status(401);",
+							"});",
+							"",
+							"pm.test(\"Message d'erreur d'autorisation WooCommerce\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.code).to.include(\"cannot_view\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/wp-json/wc/v3/orders",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"wp-json",
+						"wc",
+						"v3",
+						"orders"
+					]
+				},
+				"description": "Vérifie que l'endpoint d'administration refuse les accès non autorisés (401)."
+			},
+			"response": []
+		}
+	]
+}

@@ -1,0 +1,62 @@
+services:
+  # Base de données relationnelle MariaDB
+  db:
+    image: mariadb:10.11
+    container_name: boutique_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-wordpress}
+      MYSQL_USER: ${DB_USER:-wordpress}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-wordpress_password}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD:-root_password}
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - boutique_network
+
+  # Application Web WordPress
+  wordpress:
+    image: wordpress:php8.2-apache
+    container_name: boutique_app
+    restart: unless-stopped
+    depends_on:
+      - db
+    ports:
+      - "${WP_PORT:-8080}:80"
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress_password}
+      WORDPRESS_TABLE_PREFIX: wp_
+    volumes:
+      - wp_data:/var/www/html
+    networks:
+      - boutique_network
+
+  # Conteneur WP-CLI pour l'automatisation (sauvegarde & restauration)
+  cli:
+    image: wordpress:cli
+    container_name: boutique_cli
+    depends_on:
+      - db
+      - wordpress
+    user: "33:33" # UID www-data
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${DB_NAME:-wordpress}
+      WORDPRESS_DB_USER: ${DB_USER:-wordpress}
+      WORDPRESS_DB_PASSWORD: ${DB_PASSWORD:-wordpress_password}
+    volumes:
+      - wp_data:/var/www/html
+      - ./sauvegardes:/sauvegardes
+    networks:
+      - boutique_network
+
+volumes:
+  db_data:
+  wp_data:
+
+networks:
+  boutique_network:
+    driver: bridge
