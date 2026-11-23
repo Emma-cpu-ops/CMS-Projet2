@@ -1,229 +1,158 @@
-# 🚀 Projet Boutique E-Commerce (CMS & WooCommerce)
+# 🛒 Projet E-Commerce : Boutique WooCommerce
 
-> **Module :** B3.2 CMS, E-Commerce & Mobile (M1 Info Dev)  
-> **Échéance de rendu :** Lundi 7 décembre 2026 (avant le cours)  
+> **Module :** B3.2 CMS, E-Commerce & Mobile (M1 Info Dev - IRIS)  
+> **Échéance de rendu :** Lundi 7 décembre 2026 (avant le début du cours)  
 > **Soutenance :** 5 minutes par groupe le 7 décembre 2026  
-> **Barème clé :** *« Des commits réguliers, de plusieurs membres du groupe, avec des messages lisibles. Aucun secret dans le dépôt. »*
+> **Dépôt Git :** [https://github.com/Emma-cpu-ops/CMS-Projet2](https://github.com/Emma-cpu-ops/CMS-Projet2)
 
 ---
 
-## 👥 1. Répartition des Rôles (Équipe de 3)
+## 👥 Équipe & Rôles
 
-Pour éviter tout conflit sur Git et garantir que chaque membre dispose d'un historique de commits riche et équilibré, les responsabilités sont clairement réparties :
-
-| Rôle | Membre assigné | Fichiers et dossiers sous sa responsabilité | Tâches principales |
-| :--- | :--- | :--- | :--- |
-| **Membre 1 : Identité & Design** | *Allan* | `charte/`<br>`theme/`<br>`README.md` *(section captures)* | • Définition de la charte graphique et du logo (SVG/PNG)<br>• Création du thème en blocs (Twenty Twenty-Five)<br>• Personnalisation de l'accueil, en-tête, pied de page et vue mobile (390px)<br>• Export du thème dans `theme/` et prises de captures |
-| **Membre 2 : Cadrage Métier & Catalogue** | *Dibé* | `NOTE.md`<br>Catalogue WooCommerce<br>`README.md` *(sécurité & sources)* | • Rédaction de la note de cadrage `NOTE.md` (CMS vs sur-mesure + schéma Mermaid du modèle de données)<br>• Saisie des 12 produits (images, variations, stocks, promotions, UGS)<br>• Configuration TVA (20% / 5,5%), livraison, code promo et pages légales |
-| **Membre 3 : DevOps, Docker & API** | *Emmanuelle* | `docker-compose.yml`<br>`scripts/`<br>`sauvegardes/`<br>`api/`<br>`.env.example` | • Création de l'infrastructure Docker (`wordpress`, `mariadb`, `wordpress:cli`)<br>• Écriture des scripts `scripts/sauvegarde.sh` et `scripts/restauration.sh`<br>• Conception et export de la collection Postman (`api/boutique.postman_collection.json`)<br>• Test de restauration de la boutique dans Docker |
+* **Membre 1 (Identité & Design) :** *(Nom / Prénom)* — Charte graphique, logo, thème en blocs Twenty Twenty-Five, pages d'accueil et responsive (390px).
+* **Membre 2 (Cadrage & Catalogue) :** *(Nom / Prénom)* — Note de cadrage `NOTE.md`, 12 fiches produits, variations, promotions, TVA, livraison.
+* **Membre 3 (DevOps, Docker & API) :** **Emmanuelle** — Docker Compose, scripts d'automatisation, collection Postman API, sécurité.
 
 ---
 
-## 📅 2. Planning des 4 Semaines (Rétroplanning)
+## 🏢 Présentation du Client & de la Boutique
 
-```mermaid
-timeline
-    title Rétroplanning du Projet
-    Semaine 1 (10 au 15 nov.) : Choix du client & charte graphique : Initialisation dépôt Git & site Local : Rédaction NOTE.md
-    Semaine 2 (16 au 22 nov.) : Thème personnalisé & accueil en blocs : Catalogue (12 produits complets avec variations/stocks)
-    Semaine 3 (23 au 29 nov.) : Configuration TVA & transporteurs : Commandes et paiements de test : Collection Postman
-    Semaine 4 (30 nov. au 6 déc.) : Sauvegarde & restauration Docker validées : README final & captures : Répétition de la soutenance
-    7 Décembre 2026 : Rendu GitHub sur Teams : Soutenance de 5 minutes
-```
-
-* **Semaine 1 (10 au 15 nov.) :** Choix du client, charte graphique, dépôt Git, site Local, `NOTE.md`
-* **Semaine 2 (16 au 22 nov.) :** Thème personnalisé, accueil en blocs, catalogue (12 produits complets)
-* **Semaine 3 (23 au 29 nov.) :** TVA, transporteurs, paiements test, commande de test, collection Postman
-* **Semaine 4 (30 nov. au 6 déc.) :** Sauvegarde/restauration Docker validée, README final, répétition soutenance
-* **🎯 7 Décembre 2026 :** Rendu du lien GitHub sur Teams + Soutenance de 5 minutes
+* **Commerce choisi :** *(Exemple : Torréfacteur artisanal à Lyon / Épicerie fine / Savonnerie)*
+* **Nom de la marque :** *(Nom fictif)*
+* **Slogan & Promesse :** *(Exemple : Cafés de spécialité torréfiés localement et issus du commerce équitable)*
+* **Cible :** Particuliers et amateurs de produits artisanaux à la recherche de qualité et de traçabilité.
 
 ---
 
-## 📁 3. Arborescence Stricte du Dépôt Git
+## 🚀 Guide de Démarrage & Relance de la Boutique
 
-> **Important :** Ne jamais versionner le cœur WordPress ni les fichiers d'installation complets. Seuls nos développements et configurations propres sont suivis.
-
-```text
-boutique-client/
-├── README.md               # Présentation, captures d'écran, sécurité, relance
-├── NOTE.md                 # Note de cadrage (2 pages) + modèle de données Mermaid
-├── charte/                 # Logo (fond transparent) et charte graphique du client
-├── theme/                  # Thème exporté depuis l'éditeur de site
-├── api/                    # Collection Postman (boutique.postman_collection.json)
-├── docker-compose.yml      # Configuration Docker (mariadb, wordpress, cli)
-├── scripts/
-│   ├── sauvegarde.sh       # Script d'export WP-CLI + compression médias
-│   └── restauration.sh     # Script d'import SQL + wp search-replace
-├── sauvegardes/            # Export SQL et archive des médias de démonstration
-├── .env.example            # Gabarit des variables d'environnement (sans secrets)
-└── .gitignore              # Exclusion stricte des secrets et fichiers lourds
-```
-
-### Configuration du `.gitignore` obligatoire
-
-```gitignore
-# Secrets et mots de passe (CRITIQUE pour l'évaluation)
-.env
-*.key
-*.pem
-
-# Ne JAMAIS committer le cœur WordPress ni les dossiers de Local
-wp-admin/
-wp-includes/
-wp-content/uploads/
-wp-config.php
-
-# Fichiers systèmes parasites
-.DS_Store
-Thumbs.db
-```
-
----
-
-## 🌿 4. Règles de Travail Git au Quotidien (GitHub Flow)
-
-> ⛔ **Règle absolue :** Ne jamais faire de `git push` directement sur la branche `main` !  
-> Chaque membre travaille sur une branche dédiée et soumet une Pull Request (PR) revue par un pair.
-
-### 1. Démarrer une nouvelle tâche
-
-```bash
-# Se placer sur main et récupérer les dernières modifications
-git checkout main
-git pull origin main
-
-# Créer sa branche de fonctionnalité
-git checkout -b feat/nom-de-la-tache
-# Exemples : feat/charte-client, feat/note-cadrage, feat/docker-scripts
-```
-
-### 2. Enregistrer son travail avec des commits normalisés
-
-```bash
-git add .
-git commit -m "feat(theme): mise en place de la palette et de l'en-tête"
-git push -u origin feat/nom-de-la-tache
-```
-
-**Préfixes conventionnels recommandés :**
-* `feat:` Nouvelle fonctionnalité ou nouveau composant
-* `fix:` Correction d'un bug ou d'une erreur de configuration
-* `docs:` Modification de la documentation (`README.md`, `NOTE.md`, charte)
-* `style:` Ajustements CSS / blocs de mise en page
-* `refactor:` Réorganisation de code ou de scripts sans changement fonctionnel
-
-### 3. Valider et fusionner sur `main`
-
-1. Ouvrir une **Pull Request** sur GitHub.
-2. Un collègue effectue une relecture rapide et clique sur **Merge pull request**.
-3. Chaque membre synchronise son dépôt local :
-   ```bash
-   git checkout main
-   git pull origin main
-   ```
-
----
-
-## 🔄 5. Synchronisation de la Base de Données & des Médias
-
-WordPress stocke sa configuration et son catalogue dans MariaDB/MySQL. Pour partager l'état du site entre équipiers :
-
-### Quand un membre modifie WooCommerce ou le catalogue :
-
-1. Exécuter le script d'export depuis la racine du projet :
-   ```bash
-   bash scripts/sauvegarde.sh
-   ```
-2. Committer les fichiers générés dans `sauvegardes/` et ouvrir une Pull Request :
-   ```bash
-   git add sauvegardes/
-   git commit -m "feat(data): export mise à jour catalogue et réglages"
-   git push origin feat/maj-catalogue
-   ```
-
-### Quand les autres membres récupèrent la mise à jour :
-
-1. Mettre à jour la branche `main` :
-   ```bash
-   git checkout main
-   git pull origin main
-   ```
-2. Appliquer les données dans leur environnement local :
-   ```bash
-   bash scripts/restauration.sh
-   ```
-
----
-
-## 🐳 6. Déploiement & Environnement Docker
+Ce guide permet à tout évaluateur de cloner le dépôt et de relancer la boutique localement en quelques minutes grâce à Docker.
 
 ### Prérequis
+* [Docker](https://www.docker.com/) ou [Colima](https://github.com/abiosoft/colima) actif sur la machine.
+* `docker-compose` ou plugin `docker compose` installé.
 
-* [Docker Desktop](https://www.docker.com/products/docker-desktop/) installé et actif
-* Fichier `.env` configuré à partir du gabarit `.env.example` :
-  ```bash
-  cp .env.example .env
-  ```
-
-### Lancement de l'environnement
+### Procédure d'installation
 
 ```bash
-# Démarrer les conteneurs (WordPress + MariaDB)
-docker compose up -d
+# 1. Cloner le dépôt et entrer dans le dossier
+git clone https://github.com/Emma-cpu-ops/CMS-Projet2.git
+cd CMS-Projet2
 
-# Vérifier le statut des services
-docker compose ps
+# 2. Préparer les variables d'environnement
+cp .env.example .env
+
+# 3. Démarrer les conteneurs (WordPress + MariaDB)
+docker-compose up -d
+
+# 4. Restaurer la base de données et les médias de démonstration
+bash scripts/restauration.sh
 ```
 
-* **Accès au site :** `http://localhost:8080` (ou port configuré)
-* **Administration WordPress :** `http://localhost:8080/wp-admin`
+👉 **Accès à la boutique :** [http://localhost:8080](http://localhost:8080)  
+👉 **Back-office WordPress :** [http://localhost:8080/wp-admin](http://localhost:8080/wp-admin)
 
 ---
 
-## 📸 7. Captures d'Écran de la Boutique (Validation)
+## 📸 Captures d'Écran Obligatoires (6 Vues Clés)
 
-*(Insérer les captures d'écran finales requises pour le rendu)*
-
-| Vue | Aperçu |
-| :--- | :--- |
-| **1. Page d'accueil (Desktop)** | ![Accueil](charte/captures/01-accueil.png) |
-| **2. Fiche produit détaillée** *(variations, stock, prix)* | ![Fiche Produit](charte/captures/02-produit.png) |
-| **3. Panier d'achat** | ![Panier](charte/captures/03-panier.png) |
-| **4. Tunnel de commande / Validation** | ![Commande](charte/captures/04-commande.png) |
-| **5. Vue Mobile responsive (390px)** | ![Vue Mobile](charte/captures/05-mobile-390px.png) |
-| **6. Boutique restaurée sous Docker** | ![Docker](charte/captures/06-docker-restauration.png) |
+| # | Vue | Aperçu |
+| :-: | :--- | :--- |
+| **1** | **Page d'accueil (Desktop)**<br>*(Bannière, sélection produits, réassurance)* | ![Accueil](charte/captures/01-accueil.png) |
+| **2** | **Fiche produit détaillée**<br>*(Variations d'attributs, stock et prix TTC)* | ![Produit](charte/captures/02-produit.png) |
+| **3** | **Panier d'achat**<br>*(Calcul TVA, frais de port, code promo)* | ![Panier](charte/captures/03-panier.png) |
+| **4** | **Tunnel de commande / Checkout**<br>*(Paiement test, case de consentement)* | ![Commande](charte/captures/04-commande.png) |
+| **5** | **Vue mobile responsive**<br>*(Testé et vérifié à 390 px de large)* | ![Mobile](charte/captures/05-mobile-390px.png) |
+| **6** | **Boutique restaurée sous Docker**<br>*(Tournant sur http://localhost:8080)* | ![Docker](charte/captures/06-docker-restauration.png) |
 
 ---
 
-## 🔒 8. Sécurité & Contrôle Anti-Fuite de Secrets
+## 🖼️ Sources des Médias & Crédits Photos
 
-Avant tout push ou rendu final, s'assurer qu'aucun identifiant, clé d'API ou mot de passe n'a été indexé dans Git :
+Conformément aux consignes, aucune photo ne provient d'une marque commerciale. Toutes les images sont libres de droits :
+* **Images produits & bannières :** [Unsplash](https://unsplash.com) & [Pexels](https://pexels.com) (auteurs cités dans la note de livraison).
+* **Logo & pictogrammes :** Création vectorielle originale (SVG fond transparent) située dans le dossier `charte/`.
 
-```bash
-# Commande de vérification (ne doit renvoyer aucun résultat sensible) :
-git grep -nE "ck_|cs_|password|DB_PASSWORD"
+---
+
+## 🔌 Documentation de l'API WooCommerce (Partie 5)
+
+La collection Postman complète et exécutable se trouve dans [`api/boutique.postman_collection.json`](file:///Users/emmanuelle/CMS-Projet2/api/boutique.postman_collection.json). Elle utilise la variable `{{baseUrl}}` (`http://localhost:8080`).
+
+### Analyse des 5 requêtes et de leurs en-têtes (Headers) :
+
+1. **`GET /wp-json/wc/store/v1/products`**
+   * **En-têtes envoyés :** `Accept: application/json` pour demander une réponse au format JSON.
+   * **En-têtes reçus :** `Content-Type: application/json`, `X-WP-Total` (nombre total de produits) et `X-WP-TotalPages`.
+   * **Vérification :** Renvoie un code `200 OK` avec la liste des produits et les prix en centimes (`currency_minor_unit`).
+
+2. **`GET /wp-json/wc/store/v1/cart`**
+   * **En-têtes envoyés :** Aucun en-tête d'authentification particulier lors de l'appel initial.
+   * **En-têtes reçus :** Le serveur retourne l'en-tête `Cart-Token: <token>`, qui identifie de manière unique le panier du visiteur sans session PHP classique. Ce jeton est automatiquement sauvegardé dans la variable d'environnement Postman `cartToken`.
+
+3. **`POST /wp-json/wc/store/v1/cart/add-item`**
+   * **En-têtes envoyés :** `Cart-Token: {{cartToken}}` pour lier l'ajout au panier créé, et `Content-Type: application/json` avec l'ID du produit dans le body.
+   * **En-têtes reçus :** `Cart-Token` mis à jour et code de statut `201 Created` confirmant l'ajout de l'article.
+
+4. **`POST /wp-json/wc/store/v1/checkout`**
+   * **En-têtes envoyés :** `Cart-Token: {{cartToken}}` et `Content-Type: application/json` contenant les coordonnées de facturation et de livraison du client fictif.
+   * **En-têtes reçus :** Statut `200 OK` ou `201 Created` avec les détails de la commande créée dans WooCommerce.
+
+5. **`GET /wp-json/wc/v3/orders` (sans clé d'API)**
+   * **En-têtes envoyés :** Requête brute sans en-tête d'autorisation (`Authorization` absent).
+   * **En-têtes reçus :** `HTTP/1.1 401 Unauthorized` avec message `woocommerce_rest_cannot_view`.
+   * **Pourquoi c'est une excellente nouvelle :** Cela démontre que les données sensibles d'administration (commandes, adresses des clients, montants) sont hermétiquement protégées et inaccessibles aux utilisateurs non authentifiés.
+
+---
+
+## 🛡️ Mesures de Sécurité en Place & Recommandations Production (Partie 6)
+
+Cinq mesures clés sont appliquées ou prévues pour le passage en production :
+
+1. **Suppression du compte `admin` générique :**
+   * *Risque couvert :* Attaques par force brute automatisées ciblant le nom d'utilisateur par défaut `admin`. Un identifiant personnalisé complexe est utilisé.
+2. **Cloisonnement des secrets et variables (`.env`) :**
+   * *Risque couvert :* Fuite d'identifiants de base de données et de clés secrètes sur GitHub. Le `.gitignore` bloque strictement le `.env` et les clés privées.
+3. **Limitation des tentatives de connexion (Rate Limiting) :**
+   * *Risque couvert :* Attaques par déni de service et force brute sur la page `wp-login.php` et sur l'endpoint REST API d'authentification.
+4. **Masquage de la liste des utilisateurs dans l'API REST :**
+   * *Risque couvert :* Énumération des comptes (`/wp-json/wp/v2/users`) permettant à un pirate de découvrir les logins des administrateurs et rédacteurs.
+5. **Principe du moindre privilège pour les rôles WooCommerce :**
+   * *Risque couvert :* Élévation de privilèges. Les comptes clients ne possèdent que le rôle `Customer` et les gestionnaires de boutique le rôle `Shop Manager`, sans accès aux fichiers ni aux extensions.
+
+---
+
+## 💾 Stratégie de Sauvegarde & Déploiement (Partie 7)
+
+### 1. Automatisation nocturne par tâche Cron
+Sur un serveur de production Linux, le script `scripts/sauvegarde.sh` serait planifié chaque nuit à 3h00 du matin via la crontab système :
+```cron
+0 3 * * * /bin/bash /var/www/boutique/scripts/sauvegarde.sh >> /var/log/backup_boutique.log 2>&1
 ```
+* **Destination des fichiers :** Les sauvegardes ne doivent **jamais** rester sur le même disque que le site (en cas de panne matérielle du serveur). Elles sont automatiquement chiffrées et synchronisées vers un stockage objet distant (ex. bucket AWS S3, Cloudflare R2 ou serveur NAS dédié) via l'outil `rclone` ou `aws s3 sync`.
 
----
+### 2. Comparatif : Hébergement mutualisé avec cPanel vs Docker / VPS
 
-## ✅ 9. Checklist de Validation Finale (Avant Rendu du 7 Décembre)
-
-- [ ] **Zéro secret dans Git :** La commande `git grep -nE "ck_|cs_|password|DB_PASSWORD"` ne retourne aucun secret.
-- [ ] **Historique d'équipe équilibré :** Chaque membre a des commits réguliers et nominatifs sur GitHub.
-- [ ] **6 captures d'écran minimum :** Accueil, fiche produit, panier, commande, vue mobile (390px) et environnement Docker opérationnel.
-- [ ] **Test de restauration réussi :** La restauration via `scripts/restauration.sh` a été validée avec succès sur une autre machine.
-- [ ] **Note de cadrage (`NOTE.md`) complète :** 2 pages, analyse comparative CMS vs sur-mesure et modèle conceptuel de données (diagramme Mermaid).
-- [ ] **Collection Postman opérationnelle :** Située dans `api/boutique.postman_collection.json`.
-
----
-
-## 🎤 10. Organisation de la Soutenance (5 Minutes Chrono)
-
-> ⚠️ **Règle impérative :** Les 3 membres du groupe doivent obligatoirement prendre la parole.
-
-| Temps | Sujet | Intervenant |
+| Critère | Hébergement mutualisé cPanel | Déploiement Conteneurisé (Docker / VPS) |
 | :--- | :--- | :--- |
-| **1 min** | Présentation du client, proposition de valeur et charte graphique | Allan |
-| **2 min** | Démonstration en direct du parcours d'achat (panier, variations, promo, checkout) | Dibé |
-| **1 min** | Démonstration technique (Docker, scripts ou appels API Postman) | Emmanuelle |
-| **1 min** | Rétrospective, difficultés surmontées & axes d'amélioration | Tous les 3 |
+| **Mise en place** | Simple via SFTP, phpMyAdmin et interface graphique | Nécessite des compétences DevOps et un terminal SSH |
+| **Gestion DB & Fichiers** | Import manuel via phpMyAdmin (limite d'upload PHP) | Automatisation scriptée via WP-CLI sans limite de taille |
+| **Reproductibilité** | Dépend de la version PHP et des modules de l'hébergeur | 100% reproductible à l'identique grâce aux images Docker |
+| **Performance & Isolation** | Ressources partagées avec d'autres clients | Ressources dédiées et isolation complète des services |
+| **Quand choisir ?** | Petit site vitrine avec budget restreint et sans dev dédié | Boutique e-commerce critique avec besoins de scalabilité |
+
+### 3. Comparatif : Script shell maison vs Extension WordPress (ex. UpdraftPlus)
+
+* **Ce qu'une extension fait de plus :** Interface graphique pour débutants, planification native depuis le tableau de bord WordPress, envoi direct en un clic vers Google Drive / Dropbox, restauration guidée sans toucher au terminal.
+* **Ce qu'une extension fait de moins (sa faille critique) :** Elle est exécutée **à l'intérieur** de WordPress. Si le cœur WordPress est corrompu, infecté par un malware, ou si une erreur critique PHP empêche le site de démarrer ("White Screen of Death"), l'extension est inaccessible et ne peut pas restaurer le site. Le script shell, exécuté depuis l'extérieur par le système d'exploitation, fonctionne en toute circonstance.
+
+---
+
+## 🎤 Déroulé de la Soutenance (5 Minutes Chrono)
+
+Chaque membre prend la parole obligatoirement :
+
+* **1 min (Membre 1) :** Identité du client, proposition de valeur, charte graphique et intégration du thème.
+* **2 min (Membre 2) :** Démonstration en direct du parcours d'achat (fiche produit, variation, panier, code promo, validation).
+* **1 min (Membre 3 - Emmanuelle) :** Démonstration technique (restauration Docker ou exécution des requêtes Postman).
+* **1 min (Collectif) :** Rétrospective, difficultés surmontées et axes d'amélioration.
