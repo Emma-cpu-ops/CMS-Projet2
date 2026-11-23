@@ -1,8 +1,8 @@
 {
 	"info": {
-		"_postman_id": "b3e2a101-7890-4cde-8f12-9876543210ab",
+		"_postman_id": "a9b8c7d6-1234-4567-89ab-cdef01234567",
 		"name": "Boutique E-Commerce WooCommerce (Store API & Admin)",
-		"description": "Collection officielle Postman pour le projet B3.2 CMS & E-Commerce (IRIS M1 Info Dev)",
+		"description": "Collection Postman officielle pour le projet B3.2 CMS, E-Commerce & Mobile (M1 Info Dev - IRIS).\n\nCette collection couvre le cycle d'achat complet via WooCommerce Store API (v1) et la vérification de sécurité de l'API REST administrative (v3).",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"variable": [
@@ -25,14 +25,20 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Statut 200 OK\", function () {",
+							"pm.test(\"Code statut HTTP 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"En-tête Content-Type est application/json\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\");",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
 							"});",
 							"",
 							"pm.test(\"Les prix sont exprimés en centimes (currency_minor_unit)\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.be.an(\"array\");",
 							"    if (jsonData.length > 0) {",
+							"        pm.expect(jsonData[0]).to.have.property(\"prices\");",
 							"        pm.expect(jsonData[0].prices).to.have.property(\"currency_minor_unit\");",
 							"        pm.expect(jsonData[0].prices.currency_minor_unit).to.be.a(\"number\");",
 							"    }",
@@ -47,7 +53,8 @@
 				"header": [
 					{
 						"key": "Accept",
-						"value": "application/json"
+						"value": "application/json",
+						"type": "text"
 					}
 				],
 				"url": {
@@ -63,7 +70,7 @@
 						"products"
 					]
 				},
-				"description": "Vérifie le catalogue public et la présence des prix en centimes."
+				"description": "Vérifie le catalogue public WooCommerce. En-tête envoyé : Accept application/json. En-têtes reçus : Content-Type, X-WP-Total. Vérifie le statut 200 et les prix en centimes."
 			},
 			"response": []
 		},
@@ -74,15 +81,15 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Statut 200 OK\", function () {",
+							"pm.test(\"Code statut HTTP 200 OK\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"En-tête Cart-Token présent et mémorisé dans une variable\", function () {",
+							"pm.test(\"En-tête Cart-Token présent et mémorisé\", function () {",
 							"    pm.response.to.have.header(\"Cart-Token\");",
 							"    var token = pm.response.headers.get(\"Cart-Token\");",
 							"    pm.collectionVariables.set(\"cartToken\", token);",
-							"    console.log(\"Cart-Token capturé : \" + token);",
+							"    console.log(\"Jeton de session panier capturé :\", token);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -91,7 +98,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{baseUrl}}/wp-json/wc/store/v1/cart",
 					"host": [
@@ -105,7 +118,7 @@
 						"cart"
 					]
 				},
-				"description": "Initialise le panier et extrait l'en-tête Cart-Token."
+				"description": "Initialise une session de panier publique. Le serveur répond avec l'en-tête 'Cart-Token' qui est automatiquement sauvegardé dans la variable {{cartToken}}."
 			},
 			"response": []
 		},
@@ -116,12 +129,18 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Statut 201 Created\", function () {",
+							"pm.test(\"Code statut HTTP 201 Created\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
 							"",
-							"pm.test(\"Le jeton Cart-Token est renvoyé\", function () {",
+							"pm.test(\"Le jeton Cart-Token est bien renvoyé\", function () {",
 							"    pm.response.to.have.header(\"Cart-Token\");",
+							"});",
+							"",
+							"pm.test(\"L'article est présent dans les items\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"items\");",
+							"    pm.expect(jsonData.items.length).to.be.above(0);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -138,7 +157,13 @@
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json"
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
 					}
 				],
 				"body": {
@@ -159,7 +184,7 @@
 						"add-item"
 					]
 				},
-				"description": "Ajoute un article au panier en transmettant le Cart-Token."
+				"description": "Ajoute un produit au panier en envoyant l'en-tête Cart-Token. Le serveur répond en 201 Created avec le récapitulatif du panier mis à jour."
 			},
 			"response": []
 		},
@@ -170,13 +195,14 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Statut 200 ou 201 (Commande créée)\", function () {",
+							"pm.test(\"Code statut HTTP 200 OK ou 201 Created (Commande validée)\", function () {",
 							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
 							"});",
 							"",
-							"pm.test(\"La réponse contient les détails de commande\", function () {",
+							"pm.test(\"La réponse contient l'identifiant de commande (order_id)\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData).to.have.property(\"order_id\");",
+							"    console.log(\"Commande créée avec ID :\", jsonData.order_id);",
 							"});"
 						],
 						"type": "text/javascript"
@@ -193,12 +219,18 @@
 					},
 					{
 						"key": "Content-Type",
-						"value": "application/json"
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
 					}
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"billing_address\": {\n        \"first_name\": \"Jean\",\n        \"last_name\": \"Dupont\",\n        \"address_1\": \"10 rue de la Paix\",\n        \"city\": \"Paris\",\n        \"postcode\": \"75001\",\n        \"country\": \"FR\",\n        \"email\": \"jean.dupont.test@example.com\",\n        \"phone\": \"0601020304\"\n    },\n    \"payment_method\": \"bacs\"\n}"
+					"raw": "{\n    \"billing_address\": {\n        \"first_name\": \"Jean\",\n        \"last_name\": \"Dupont\",\n        \"address_1\": \"10 Rue de la Paix\",\n        \"city\": \"Paris\",\n        \"postcode\": \"75001\",\n        \"country\": \"FR\",\n        \"email\": \"client.test@example.com\",\n        \"phone\": \"0601020304\"\n    },\n    \"payment_method\": \"bacs\"\n}"
 				},
 				"url": {
 					"raw": "{{baseUrl}}/wp-json/wc/store/v1/checkout",
@@ -213,7 +245,7 @@
 						"checkout"
 					]
 				},
-				"description": "Finalise la commande à partir du panier courant."
+				"description": "Finalise la commande à partir du panier courant. Transmet le Cart-Token et les coordonnées de facturation. La commande est enregistrée dans WooCommerce."
 			},
 			"response": []
 		},
@@ -224,12 +256,13 @@
 					"listen": "test",
 					"script": {
 						"exec": [
-							"pm.test(\"Statut 401 Unauthorized (Excellente nouvelle : API protégée)\", function () {",
+							"pm.test(\"Code statut HTTP 401 Unauthorized (API protégée)\", function () {",
 							"    pm.response.to.have.status(401);",
 							"});",
 							"",
-							"pm.test(\"Message d'erreur d'autorisation WooCommerce\", function () {",
+							"pm.test(\"Code d'erreur de permission WooCommerce retourné\", function () {",
 							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData).to.have.property(\"code\");",
 							"    pm.expect(jsonData.code).to.include(\"cannot_view\");",
 							"});"
 						],
@@ -239,7 +272,13 @@
 			],
 			"request": {
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
 				"url": {
 					"raw": "{{baseUrl}}/wp-json/wc/v3/orders",
 					"host": [
@@ -252,7 +291,7 @@
 						"orders"
 					]
 				},
-				"description": "Vérifie que l'endpoint d'administration refuse les accès non autorisés (401)."
+				"description": "Vérifie la sécurité de l'API d'administration. Une requête sans clé d'API (sans en-tête Authorization) doit impérativement retourner un code 401 Unauthorized."
 			},
 			"response": []
 		}
