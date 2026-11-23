@@ -1,0 +1,14 @@
+# Secrets et mots de passe (CRITIQUE pour l'évaluation)
+.env
+*.key
+*.pem
+
+# Ne JAMAIS committer le cœur WordPress ni les dossiers de Local
+wp-admin/
+wp-includes/
+wp-content/uploads/
+wp-config.php
+
+# Fichiers systèmes parasites
+.DS_Store
+Thumbs.db
